@@ -17,7 +17,7 @@ class BaseAPIClient(object):
                 'BaseAPIClient subclasses must set "api_path"'
             )
 
-    def get(self, method, params):
+    def get(self, method, params={}):
         params['api_key'] = self.api_key
         endpoint = self.base_url + self.api_path + method
         response = requests.get(
@@ -29,7 +29,15 @@ class BaseAPIClient(object):
         return response.json()
 
 
-
 class FundraiserAPIClient(BaseAPIClient):
     api_path = 'fundraisers/v1/'
 
+    def fundraiser_search(self, surname, forename=None):
+        params = {}
+        params['surname'] = surname
+        if forename:
+            params['forename'] = forename
+        return self.get('search', params)
+
+    def fundraiser_details(self, resource_id):
+        return self.get('account' + '/' + resource_id)
