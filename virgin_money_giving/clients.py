@@ -40,4 +40,11 @@ class FundraiserAPIClient(BaseAPIClient):
         return self.get('search', params)
 
     def fundraiser_details(self, resource_id):
-        return self.get('account' + '/' + resource_id)
+        return self.get(
+            'account/{}'.format(resource_id)
+        )
+
+    def fundraiser_page_details(self, resource_id, page_id):
+        return self.get(
+            'account/{0}/pages/{1}'.format(resource_id, page_id)
+        )
