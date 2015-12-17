@@ -3,14 +3,14 @@ from exceptions import NotImplementedError
 
 
 class BaseAPIClient(object):
-    base_url = 'https://sandbox.api.virginmoneygiving.com/'
+    base_url = 'https://api.virginmoneygiving.com/'
     api_path = None
     api_key = None
     headers = {
         'Accept': 'application/json'
     }
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, sandbox=False):
         self.api_key = api_key
         if not self.api_path:
             raise NotImplementedError(
