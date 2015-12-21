@@ -22,6 +22,10 @@ class VirginMoneyGivingAPIClient(object):
         response.raise_for_status()
         return response.json()
 
+    def post(self, method, data, params={}):
+        # TODO
+        raise NotImplementedError()
+
     def fundraiser_search(self, surname, forename=None):
         params = {}
         params['surname'] = surname
@@ -38,3 +42,61 @@ class VirginMoneyGivingAPIClient(object):
         return self.get(
             'fundraisers/v1/account/{0}/pages/{1}'.format(resource_id, page_id)
         )
+
+    def charity_search(self):
+        # TODO
+        raise NotImplementedError()
+
+    def validate_url(self):
+        # TODO
+        raise NotImplementedError()
+
+    def country_code_lookup(self):
+        # TODO
+        raise NotImplementedError()   
+
+    def address_lookup(self):
+        # TODO
+        raise NotImplementedError()   
+    
+    def account_exists(self, email_address, date_of_birth):
+        params = {}
+        params['emailAddress'] = email_address
+        params['dateOfBirth'] = date_of_birth
+        return self.get(
+            'fundraisers/v1/validateaccount.json', params
+        )
+
+    def create_fundraiser_account(self):
+        # TODO
+        raise NotImplementedError()
+
+    def activity_lookup(self):
+        # TODO
+        raise NotImplementedError()
+
+    def event_search(self):
+        # TODO
+        raise NotImplementedError()
+
+    def event_summary(self):
+        # TODO
+        raise NotImplementedError()
+
+    def event_fundraisers(self):
+        # TODO
+        raise NotImplementedError()
+
+    def event_fundraisers_2(self):
+        # TODO
+        raise NotImplementedError()
+
+    def charity_fundraisers(self):
+        # TODO
+        raise NotImplementedError()
+
+    def charity_details(self):
+        # TODO
+        raise NotImplementedError()
+
+
