@@ -41,7 +41,7 @@ class FundraiserAPIClient(BaseAPIClient):
 
     def fundraiser_details(self, resource_id):
         return self.get(
-            'account/{}'.format(resource_id)
+            'account/{0}'.format(resource_id)
         )
 
     def fundraiser_page_details(self, resource_id, page_id):
