@@ -11,17 +11,23 @@ class VirginMoneyGivingAPIClient(object):
     def __init__(self, api_key, sandbox=False):
         self.api_key = api_key
 
-    def get(self, method, params={}):
-        params['api_key'] = self.api_key
-        endpoint = self.base_url + method
+        if sandbox:
+            self.base_url = 'https://sandbox.api.virginmoneygiving.com/'
+
+    def get_url(self, url, params={}):
         response = requests.get(
-            endpoint,
+            url,
             params=params,
             headers=self.headers,
         )
         response.raise_for_status()
         return response.json()
 
+    def get(self, method, params={}):
+        params['api_key'] = self.api_key
+        endpoint = self.base_url + method
+        return self.get_url(endpoint, params)
+        
     def post(self, method, data, params={}):
         # TODO
         raise NotImplementedError()
