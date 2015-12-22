@@ -1,4 +1,10 @@
+from time import sleep
+
 import requests
+
+
+class RateLimitedError(Exception):
+    pass
 
 
 class VirginMoneyGivingAPIClient(object):
@@ -15,16 +21,22 @@ class VirginMoneyGivingAPIClient(object):
             self.base_url = 'https://sandbox.api.virginmoneygiving.com/'
 
     def get_url(self, url, params={}):
+        params['api_key'] = self.api_key
         response = requests.get(
             url,
             params=params,
             headers=self.headers,
         )
-        response.raise_for_status()
+        
+        if response.status_code == 403:
+            error_code = response.headers['X-Mashery-Error-Code']
+            if error_code == 'ERR_403_DEVELOPER_OVER_QPS':
+                raise RateLimitedError
+
+        response.raise_for_status()    
         return response.json()
 
     def get(self, method, params={}):
-        params['api_key'] = self.api_key
         endpoint = self.base_url + method
         return self.get_url(endpoint, params)
         
@@ -104,5 +116,3 @@ class VirginMoneyGivingAPIClient(object):
     def charity_details(self):
         # TODO
         raise NotImplementedError()
-
-
