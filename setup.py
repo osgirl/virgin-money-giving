@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
+
 setup(
     name='virgin-money-giving',
     version='0.0',
