@@ -80,7 +80,7 @@ class VirginMoneyGivingAPIClient(object):
     def account_exists(self, email_address, date_of_birth):
         params = {}
         params['emailAddress'] = email_address
-        params['dateOfBirth'] = date_of_birth
+        params['dateOfBirth'] = date_of_birth.strftime('%Y%m%d')
         return self.get(
             'fundraisers/v1/validateaccount.json', params
         )
