@@ -3,7 +3,7 @@ from time import sleep
 import requests
 
 
-class RateLimitedError(Exception):
+class RateLimitError(Exception):
     pass
 
 
@@ -21,25 +21,31 @@ class VirginMoneyGivingAPIClient(object):
             self.base_url = 'https://sandbox.api.virginmoneygiving.com/'
 
     def get_url(self, url, params={}):
-        params['api_key'] = self.api_key
-        response = requests.get(
-            url,
-            params=params,
-            headers=self.headers,
-        )
-        
-        if response.status_code == 403:
-            error_code = response.headers['X-Mashery-Error-Code']
-            if error_code == 'ERR_403_DEVELOPER_OVER_QPS':
-                raise RateLimitedError
+        # if rate limited, wait a second and retry
+        while True:
+            try:
+                params['api_key'] = self.api_key
+                response = requests.get(
+                    url,
+                    params=params,
+                    headers=self.headers,
+                )
 
-        response.raise_for_status()    
+                if response.status_code == 403:
+                    error_code = response.headers['X-Mashery-Error-Code']
+                    if error_code == 'ERR_403_DEVELOPER_OVER_QPS':
+                        raise RateLimitError
+            except RateLimitError:
+                sleep(1)
+                continue
+            break
+        response.raise_for_status()
         return response.json()
 
     def get(self, method, params={}):
         endpoint = self.base_url + method
         return self.get_url(endpoint, params)
-        
+
     def post(self, method, data, params={}):
         # TODO
         raise NotImplementedError()
@@ -71,12 +77,12 @@ class VirginMoneyGivingAPIClient(object):
 
     def country_code_lookup(self):
         # TODO
-        raise NotImplementedError()   
+        raise NotImplementedError()
 
     def address_lookup(self):
         # TODO
-        raise NotImplementedError()   
-    
+        raise NotImplementedError()
+
     def account_exists(self, email_address, date_of_birth):
         params = {}
         params['emailAddress'] = email_address
