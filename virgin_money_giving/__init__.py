@@ -3,6 +3,10 @@ from time import sleep
 import requests
 
 
+class VirginMoneyGivingError(Exception):
+    pass
+
+
 class RateLimitError(Exception):
     pass
 
@@ -30,7 +34,6 @@ class VirginMoneyGivingAPIClient(object):
                     params=params,
                     headers=self.headers,
                 )
-
                 if response.status_code == 403:
                     error_code = response.headers['X-Mashery-Error-Code']
                     if error_code == 'ERR_403_DEVELOPER_OVER_QPS':
@@ -39,7 +42,13 @@ class VirginMoneyGivingAPIClient(object):
                 sleep(1)
                 continue
             break
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            raise VirginMoneyGivingError(
+                'Virgin Money Giving - {}'.format(response.status_code)
+            )
+
         return response.json()
 
     def get(self, method, params={}):
