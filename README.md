@@ -10,3 +10,7 @@ This is a work in progress, currently it only implements the functionality we ne
 fundraiser_client = VirginMoneyGivingAPIClient(api_key=xxxxxxxxxxxxxxxxxxxxxxxx)
 fundraiser.get(method, data, params)
 ```
+
+TODO:
+  - Implement remaining endpoints
+  - Add max_retry parameter to get_url()
