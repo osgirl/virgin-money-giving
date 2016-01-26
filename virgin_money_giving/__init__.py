@@ -46,7 +46,10 @@ class VirginMoneyGivingAPIClient(object):
             response.raise_for_status()
         except Exception as e:
             raise VirginMoneyGivingError(
-                'Virgin Money Giving - {}'.format(response.status_code)
+                'Virgin Money Giving - {0} {1}'.format(
+                    response.status_code,
+                    url,
+                )
             )
 
         return response.json()
